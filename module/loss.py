@@ -49,9 +49,15 @@ class BinarySegmentationLoss(nn.Module):
 
 
 if __name__ == '__main__':
-    a = torch.ones(3, 5)
-    b = a.sum()
-    c = torch.sum(a)
+    import numpy as np
 
-    print(b)
-    print(c)
+    a = torch.from_numpy(np.array([
+        1, 1, 1, 0, 0
+    ], np.float32).reshape([-1, 1]))
+    b = torch.from_numpy(np.array([
+        0.1, 0.8, 0.6, 0.7, 0.8
+    ], np.float32).reshape([-1, 1]))
+
+    bs = BinarySegmentationLoss()
+    print(bs.dice_loss(b, a))
+

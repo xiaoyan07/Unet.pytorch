@@ -58,11 +58,4 @@ class SegData(data.Dataset):
         return im_ts, mask_ts
 
     def __len__(self):
-        raise NotImplementedError
-
-
-if __name__ == '__main__':
-    a = [1, 9, 8, 7, 6]
-    b = [1, 2, 3, 4, 5]
-    c = list(map(lambda e: (e[0], e[1]), zip(a, b)))
-    print(c)
+        raise len(self.idx_to_im_mask_path)
