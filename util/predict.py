@@ -6,6 +6,8 @@ import cv2
 def test_func():
     pass
 
+def test123_func():
+    pass
 
 class PredictPack(object):
     def __init__(self,
