@@ -1,5 +1,4 @@
-import tensorflow as tf
-
+import numpy as np
 
 def flip_left_right(image, mask=None):
     ret = []

@@ -24,7 +24,8 @@ class MetricBase(object):
         return NotImplementedError
 
     def __call__(self, y_pred, y_true):
-        return self.forward(y_pred, y_true)
+        with torch.no_grad():
+            return self.forward(y_pred, y_true)
 
 
 class Accuracy(MetricBase):
