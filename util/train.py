@@ -1,21 +1,65 @@
 import torch
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+class TrainPack(object):
+    def __init__(self,
+                 model,
+                 loss,
+                 optimizer,
+                 lr_schedule,
+                 use_gpu=True):
+        self.model = model
+        self.loss = loss
+        self.opt = optimizer
+        self.lr = lr_schedule
 
-def train(data_loader, model_fn, loss_fn, optimizer, lr_schedule):
+        self.device = torch.device('cuda' if torch.cuda.is_available() and use_gpu else 'cpu')
+        # todo: support checkpoint
 
-    for idx, (inputs, targets) in enumerate(data_loader):
-        inputs.to(device)
-        targets.to(device)
+    def train(self, data_loader):
+        """ train model by DataLoader
 
-        optimizer.zero_grad()
+        Args:
+            data_loader: a instance of torch.utils.data.DataLoader
 
-        outputs = model_fn(inputs)
+        Returns:
 
-        total_loss = loss_fn(outputs, targets)
+        """
+        for idx, (inputs, targets) in enumerate(data_loader):
+            self.train_step(inputs, targets)
+
+    def train_step(self, inputs, targets):
+        self.zero_grad()
+        self.compute_gradients(inputs, targets)
+        self.apply_gradients()
+
+    def train_in_multi_grads(self, data_loader, multiple=2):
+        data_iterator = iter(data_loader)
+
+        while True:
+            self.zero_grad()
+            for i in range(multiple):
+                data = next(data_iterator)
+                inputs, targets = data
+                self.compute_gradients(inputs, targets)
+            self.apply_gradients()
+
+    def compute_gradients(self, inputs, targets):
+        self.model.train()
+        inputs.to(self.device)
+        targets.to(self.device)
+
+        outputs = self.model(inputs)
+
+        total_loss = self.loss(outputs, targets)
 
         total_loss.backward()
 
-        optimizer.step()
-        lr_schedule.step()
+    def apply_gradients(self):
+        self.opt.step()
+        self.lr.step()
+
+        self.opt.zero_grad()
+
+    def zero_grad(self):
+        self.opt.zero_grad()
