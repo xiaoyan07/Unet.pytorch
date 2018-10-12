@@ -46,8 +46,8 @@ class TrainPack(object):
 
     def compute_gradients(self, inputs, targets):
         self.model.train()
-        inputs.to(self.device)
-        targets.to(self.device)
+        inputs = inputs.to(self.device)
+        targets = targets.to(self.device)
 
         outputs = self.model(inputs)
 

@@ -11,7 +11,7 @@ class PredictPack(object):
         self.model = model
 
     def im_predict(self, inputs):
-        inputs.to(self.device)
+        inputs = inputs.to(self.device)
 
         output = self.model(inputs)
 
