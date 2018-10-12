@@ -2,11 +2,6 @@ import torch
 from data import preprocess
 import cv2
 
-
-def test_func():
-    pass
-
-
 class PredictPack(object):
     def __init__(self,
                  model,
